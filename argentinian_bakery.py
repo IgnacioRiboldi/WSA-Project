@@ -9,7 +9,6 @@ app = Flask(__name__)
 def home():
     return """
     <h1>Welcome to the Argentinian Bakery</h1>
-    <img src="{{ url_for('downloads', filename='bakery.jpg') }}" alt="Bakery Image">
     <p>Food menu: /food</p>
     <p>Drinks menu: /drinks</p>
     <p>Promotions: /promotions</p>
