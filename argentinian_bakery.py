@@ -2,6 +2,7 @@
 # By Ignacio Riboldi
 
 from flask import Flask
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -9,9 +10,10 @@ app = Flask(__name__)
 def home():
     return """
     <h1>Welcome to the Argentinian Bakery</h1>
+    <p>Special of the day: /daily-special</p>
     <p>Food menu: /food</p>
-    <p>Drinks menu: /drinks</p>
     <p>Promotions: /promotions</p>
+    <p>Drinks menu: /drinks</p> 
     """
 
 @app.route('/food')
@@ -54,6 +56,26 @@ def promotions_menu():
     </ul>
     '''
 
+@app.route("/daily-special")
+def special_of_the_day():
+    daily_speciality = {
+        "Monday": "Chipa (cheese bread)",
+        "Tuesday": "Crusty sandwich ",
+        "Wednesday": "Pulled pork sandwich (slow cooked with Malbec)",
+        "Thursday": "Focaccia",
+        "Friday": "Choripan (Chorizo Sandwich with Chimichurri)",
+        "Saturday": "Milanesa Sandwich",
+        "Sunday": "Asado (Argentinian BBQ)"
+    }
+
+    today = datetime.now().strftime("%A")
+    food = daily_speciality.get(today, "Non available today")
+
+    return f"""
+    <h1>Special of the Day</h1>
+    <p>Today is <span style="font-weight: bold;">{today}</span> and the special of the day is: </p>
+    <p><span style="font-weight: bold;">{food}</span></p>
+    """
 
 if __name__ == '__main__':    
     app.run(debug=True)
