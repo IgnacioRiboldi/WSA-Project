@@ -28,3 +28,21 @@ With this module I manage to create a daily menu that will change depending on t
 https://docs.python.org/3/library/datetime.html
 
 https://www.w3schools.com/python/python_datetime.asp
+
+Changing format to JSON for easier interaction and manipulation
+
+https://flask-json.readthedocs.io/en/latest/
+
+Flask Request
+
+https://tedboy.github.io/flask/generated/generated/flask.Request.html
+
+https://flask.palletsprojects.com/en/stable/api/
+
+https://flask.palletsprojects.com/en/stable/reqcontext/
+
+https://www.geeksforgeeks.org/python/python-flask-request-object/
+
+Get, Post, Put and Delete
+
+https://www.youtube.com/watch?v=lxuTl8fmQNw
