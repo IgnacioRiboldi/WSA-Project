@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Promotions</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<h1>Promotions</h1>
+
+<nav>
+<a href="/" class="btn">Home</a>
+<a href="/food" class="btn">Food</a>
+<a href="/drinks" class="btn">Drinks</a>
+<a href="/promotions" class="btn">Promotions</a>
+<a href="/special" class="btn">Daily Special</a>
+</nav>
+
+<ul>
+{% for promo in promotions %}
+<li>{{ promo.name }} - ${{ promo.price }}</li>
+{% endfor %}
+</ul>
+
+</body>
+</html>

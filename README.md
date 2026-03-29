@@ -14,7 +14,11 @@ Some useful material:
 
 https://github.com/wftutorials/flask-beginner-tutorial
 
-Useful HTML and CSS material to give some format to headers or blocks
+Useful HTML and CSS material to give some format
+
+https://www.w3schools.com/howto/howto_make_a_website.asp
+
+https://www.w3schools.com/css/
 
 https://www.w3schools.com/html/html_blocks.asp
 
@@ -43,6 +47,10 @@ https://flask.palletsprojects.com/en/stable/reqcontext/
 
 https://www.geeksforgeeks.org/python/python-flask-request-object/
 
-Get, Post, Put and Delete
+Index:
 
-https://www.youtube.com/watch?v=lxuTl8fmQNw
+https://projects.raspberrypi.org/en/projects/python-web-server-with-flask/5
+
+Handling a POST Request Using an HTML
+
+https://www.geeksforgeeks.org/python/flask-creating-first-simple-application/

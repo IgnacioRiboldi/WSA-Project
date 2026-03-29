@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Drinks Menu</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<h1>Drinks Menu</h1>
+<nav>
+<a href="/" class="btn">Home</a>
+<a href="/food" class="btn">Food</a>
+<a href="/drinks" class="btn">Drinks</a>
+<a href="/promotions" class="btn">Promotions</a>
+<a href="/special" class="btn">Daily Special</a>
+</nav>
+
+<ul>
+{% for drink in drinks_menu %}
+<li>{{ drink.name }} - ${{ drink.price }}</li>
+{% endfor %}
+</ul>
+
+</body>
+</html>

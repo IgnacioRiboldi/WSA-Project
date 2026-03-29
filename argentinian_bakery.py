@@ -1,17 +1,15 @@
-# This code generates an API with Flask to show the Menu of an Argentinian Bakery
-# By Ignacio Riboldi
-
-from flask import Flask, jsonify
+from flask import Flask, render_template
 from datetime import datetime
 
 app = Flask(__name__)
 
+# Datos
 food_menu = [
     {"id": 1, "name": "Medialunas", "price": 2.00},
     {"id": 2, "name": "Facturas", "price": 3.00},
     {"id": 3, "name": "Empanadas", "price": 4.00},
     {"id": 4, "name": "Churros", "price": 2.50},
-    {"id": 5, "name": "Chocotorta Portion", "price": 5.00}
+    {"id": 5, "name": "Chocotorta Portion", "price": 7.00}
 ]
 
 drinks_menu = [
@@ -32,56 +30,38 @@ promotions = [
     {"id": 17, "name": "Whole Chocotorta", "price": 30.00}
 ]
 
+daily_speciality = {
+    "Monday": "Chipa (cheese bread)",
+    "Tuesday": "Crusty sandwich",
+    "Wednesday": "Pulled pork sandwich (slow cooked with Malbec)",
+    "Thursday": "Focaccia",
+    "Friday": "Choripan (Chorizo Sandwich with Chimichurri)",
+    "Saturday": "Milanesa Sandwich (beef or chicken)",
+    "Sunday": "Asado (Argentinian BBQ)"
+}
 
+# Links
 @app.route("/")
 def home():
-    return jsonify({
-        "message": "Welcome to the Argentinian Bakery API",
-        "endpoints": {
-            "food_menu": "/food",
-            "drinks_menu": "/drinks",
-            "promotions": "/promotions",
-            "daily_special": "/daily-special"
-        }
-    })
-
+    return render_template("index.html")
 
 @app.route("/food")
 def food():
-    return jsonify(food_menu)
-
+    return render_template("food.html", food_menu=food_menu)
 
 @app.route("/drinks")
 def drinks():
-    return jsonify(drinks_menu)
-
+    return render_template("drinks.html", drinks_menu=drinks_menu)
 
 @app.route("/promotions")
 def promo():
-    return jsonify(promotions)
+    return render_template("promotions.html", promotions=promotions)
 
-
-@app.route("/daily-special")
-def special_of_the_day():
-
-    daily_speciality = {
-        "Monday": "Chipa (cheese bread)",
-        "Tuesday": "Crusty sandwich",
-        "Wednesday": "Pulled pork sandwich (slow cooked with Malbec)",
-        "Thursday": "Focaccia",
-        "Friday": "Choripan (Chorizo Sandwich with Chimichurri)",
-        "Saturday": "Milanesa Sandwich (beef or chicken)",
-        "Sunday": "Asado (Argentinian BBQ)"
-    }
-
+@app.route("/special")
+def special():
     today = datetime.now().strftime("%A")
-    food = daily_speciality.get(today, "Not available today")
-
-    return jsonify({
-        "day": today,
-        "special": food
-    })
-
+    special_food = daily_speciality.get(today)
+    return render_template("special.html", today=today, special=special_food)
 
 if __name__ == "__main__":
     app.run(debug=True)

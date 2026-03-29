@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Daily Special</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<h1>Daily Special</h1>
+
+<nav>
+<a href="/" class="btn">Home</a>
+<a href="/food" class="btn">Food</a>
+<a href="/drinks" class="btn">Drinks</a>
+<a href="/promotions" class="btn">Promotions</a>
+<a href="/special" class="btn">Daily Special</a>
+</nav>
+
+<p>Today is <b>{{ today }}</b></p>
+
+<p>Today's special is: <b>{{ special }}</b></p>
+
+</body>
+</html>
