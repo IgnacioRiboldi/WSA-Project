@@ -83,3 +83,48 @@ def place_order():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+# Order History
+
+orders = []
+order_id_counter = 1
+
+
+@app.route("/order", methods=["GET", "POST"])
+def order():
+    global order_id_counter
+
+    if request.method == "POST":
+        items = []
+        total = 0
+
+        # EJEMPLO: procesar campos del form
+        for key, value in request.form.items():
+            if value.isdigit() and int(value) > 0:
+                name = key
+                qty = int(value)
+
+                price = 10  
+
+                subtotal = price * qty
+                total += subtotal
+
+                items.append({
+                    "name": name,
+                    "quantity": qty,
+                    "subtotal": subtotal
+                })
+
+        order = {
+            "id": order_id_counter,
+            "time": datetime.now().strftime("%H:%M:%S"),
+            "items": items,
+            "total": total
+        }
+
+        orders.append(order)
+        order_id_counter += 1
+
+        return redirect(url_for("order"))
+
+    return render_template("order.html", orders=orders)    

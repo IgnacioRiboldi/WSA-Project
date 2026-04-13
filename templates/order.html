@@ -117,5 +117,60 @@
         </div>
     </form>
 
+#Order History
+
+<hr>
+
+<h2>Order History</h2>
+
+<ul>
+{% for order in orders %}
+    <li>
+        <button type="button" class="btn toggle-order">
+            Order #{{ order.id }} - {{ order.time }} - €{{ "%.2f"|format(order.total) }}
+        </button>
+
+        <div class="order-details" style="display:none; margin-top:10px;">
+            <ul>
+                {% for item in order.items %}
+                    <li>
+                        {{ item.quantity }} x {{ item.name }} - €{{ item.subtotal }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </li>
+{% endfor %}
+</ul>
+<script>
+function updateTotal() {
+    let total = 0;
+
+    document.querySelectorAll('.item-quantity').forEach(input => {
+        let price = parseFloat(input.dataset.price) || 0;
+        let quantity = parseInt(input.value) || 0;
+
+        let extra = 0;
+
+        const checkbox = input.parentElement.querySelector('.extra-checkbox');
+        if (checkbox && checkbox.checked) {
+            extra = parseFloat(checkbox.dataset.extra) || 0;
+        }
+
+        total += (price + extra) * quantity;
+    });
+
+    document.getElementById('dynamic-total').textContent = total.toFixed(2);
+}
+
+// Detect changes
+document.querySelectorAll('.item-quantity, .extra-checkbox').forEach(el => {
+    el.addEventListener('input', updateTotal);
+    el.addEventListener('change', updateTotal);
+});
+
+// inicializar
+updateTotal();
+</script>
 </body>
 </html>
