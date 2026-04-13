@@ -1,28 +1,80 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-<title>Promotions</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <title>Promotions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1, h2 { text-align: center; }
+        nav { text-align: center; margin-bottom: 20px; }
+        nav a.btn { margin: 0 5px; }
+
+        section { max-width: 700px; margin: 0 auto; }
+        ul { list-style: none; padding: 0; }
+
+        /* Igual que en las otras páginas */
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .item-price {
+            flex: 0 0 80px;
+            font-weight: bold;
+        }
+
+        .item-name {
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover { background-color: #2980b9; }
+    </style>
 </head>
 
 <body>
 
-<h1>Promotions</h1>
+<header>
+    <h1>Promotions</h1>
 
-<nav>
-<a href="/" class="btn">Home</a>
-<a href="/food" class="btn">Food</a>
-<a href="/drinks" class="btn">Drinks</a>
-<a href="/promotions" class="btn">Promotions</a>
-<a href="/special" class="btn">Daily Special</a>
-</nav>
+    <nav>
+        <a href="/" class="btn">Home</a>
+        <a href="/food" class="btn">Food</a>
+        <a href="/drinks" class="btn">Drinks</a>
+        <a href="/promotions" class="btn">Promotions</a>
+        <a href="/special" class="btn">Daily Special</a>
+        <a href="/order" class="btn">Place Order</a>
+    </nav>
 
-<ul>
-{% for promo in promotions %}
-<li>{{ promo.name }} - ${{ promo.price }}</li>
-{% endfor %}
-</ul>
+    <p style="text-align:center;">Check out our latest deals and special offers.</p>
+</header>
+
+<section>
+    <h2>Available Promotions</h2>
+    <ul>
+    {% for promo in promotions %}
+        <li class="order-item">
+            <span class="item-price">€{{ "%.2f"|format(promo.price) }}</span>
+            <span class="item-name">{{ promo.name }}</span>
+        </li>
+    {% endfor %}
+    </ul>
+</section>
 
 </body>
 </html>

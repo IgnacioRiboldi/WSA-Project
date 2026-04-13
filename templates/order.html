@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Place Your Order</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1, h2 { text-align: center; }
+        nav { text-align: center; margin-bottom: 20px; }
+        nav a.btn { margin: 0 5px; }
+        form { max-width: 700px; margin: 0 auto; }
+        section { margin-bottom: 30px; }
+        ul { list-style: none; padding: 0; }
+        /* Flex layout for each order item */
+        .order-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee; }
+        .item-price { flex: 0 0 80px; font-weight: bold; }  /* fixed width for price column */
+        .item-name { flex: 1; margin: 0 10px; }            /* item name takes remaining space */
+        .item-quantity { width: 60px; }                    /* fixed width for quantity input */
+        .extras { font-size: 0.9em; color: #555; margin-right: 10px; }  /* style for extras label */
+        .btn { display: inline-block; padding: 10px 20px; background-color: #3498db; color: white; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; margin-top: 20px; }
+        .btn:hover { background-color: #2980b9; }
+        #dynamic-total { font-weight: bold; }
+    </style>
+</head>
+<body>
+    <!-- Header with navigation -->
+    <header>
+        <h1>Place Your Order</h1>
+        <nav>
+            <a href="/" class="btn">Home</a>
+            <a href="/food" class="btn">Food</a>
+            <a href="/drinks" class="btn">Drinks</a>
+            <a href="/promotions" class="btn">Promotions</a>
+            <a href="/special" class="btn">Daily Special</a>
+            <a href="/order" class="btn">Place Order</a>
+        </nav>
+        <p style="text-align:center;">Select the items you want to order and fill in the quantities.</p>
+    </header>
+
+    <!-- Order form -->
+    <form method="POST" action="{{ url_for('place_order') }}">
+        <!-- Food Menu Section -->
+        <section>
+            <h2>Food</h2>
+            <ul>
+            {% for item in food_menu %}
+                <li class="order-item">
+                    <!-- Price -->
+                    <span class="item-price">€{{ "%.2f"|format(item.price) }}</span>
+                    <!-- Item Name -->
+                    <span class="item-name">{{ item.name }}</span>
+                    <div>
+                        <!-- Extras checkbox if available -->
+                        {% if item.extras %}
+                            <label class="extras">
+                                <input type="checkbox" class="extra-checkbox" data-extra="0.50">
+                                Add extras
+                            </label>
+                        {% endif %}
+                        <!-- Quantity input with data-price for JS calculation -->
+                        <input type="number" name="quantity_food_{{ item.id }}" value="0" min="0" class="item-quantity" data-price="{{ item.price }}">
+                    </div>
+                </li>
+            {% endfor %}
+            </ul>
+        </section>
+
+        <!-- Drinks Menu Section -->
+        <section>
+            <h2>Drinks</h2>
+            <ul>
+            {% for item in drinks_menu %}
+                <li class="order-item">
+                    <span class="item-price">€{{ "%.2f"|format(item.price) }}</span>
+                    <span class="item-name">{{ item.name }}</span>
+                    <input type="number" name="quantity_drink_{{ item.id }}" value="0" min="0" class="item-quantity" data-price="{{ item.price }}">
+                </li>
+            {% endfor %}
+            </ul>
+        </section>
+
+        <!-- Promotions Section -->
+        <section>
+            <h2>Promotions</h2>
+            <ul>
+            {% for item in promotions %}
+                <li class="order-item">
+                    <span class="item-price">€{{ "%.2f"|format(item.price) }}</span>
+                    <span class="item-name">{{ item.name }}</span>
+                    <input type="number" name="quantity_promo_{{ item.id }}" value="0" min="0" class="item-quantity" data-price="{{ item.price }}">
+                </li>
+            {% endfor %}
+            </ul>
+        </section>
+
+        <!-- Daily Special Section -->
+        {% if daily_special %}
+        <section>
+            <h2>Daily Special - {{ daily_special.name }}</h2>
+            <ul>
+                <li class="order-item">
+                    <span class="item-price">€{{ "%.2f"|format(daily_special.price) }}</span>
+                    <span class="item-name">{{ daily_special.name }}</span>
+                    <input type="number" name="quantity_special" value="0" min="0" class="item-quantity" data-price="{{ daily_special.price }}">
+                </li>
+            </ul>
+        </section>
+        {% endif %}
+
+        <!-- Dynamic total display -->
+        <p style="text-align:right;">Total: €<span id="dynamic-total">0.00</span></p>
+
+        <!-- Submit button -->
+        <div style="text-align:center;">
+            <button type="submit" class="btn">Place Order</button>
+        </div>
+    </form>
+
+</body>
+</html>

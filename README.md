@@ -47,6 +47,20 @@ https://flask.palletsprojects.com/en/stable/reqcontext/
 
 https://www.geeksforgeeks.org/python/python-flask-request-object/
 
+Flask Render Templates
+
+https://flask.palletsprojects.com/en/stable/tutorial/templates/
+
+Flask Get and Post
+
+https://flask.palletsprojects.com/en/stable/quickstart/#http-methods
+
+https://www.youtube.com/watch?v=lxuTl8fmQNw
+
+Flask Message Flashing
+
+https://flask.palletsprojects.com/en/stable/patterns/flashing/
+
 Index:
 
 https://projects.raspberrypi.org/en/projects/python-web-server-with-flask/5
@@ -54,3 +68,7 @@ https://projects.raspberrypi.org/en/projects/python-web-server-with-flask/5
 Handling a POST Request Using an HTML
 
 https://www.geeksforgeeks.org/python/flask-creating-first-simple-application/
+
+Extra support:
+
+https://chatgpt.com/

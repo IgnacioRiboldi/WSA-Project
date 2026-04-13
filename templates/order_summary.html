@@ -1,0 +1,13 @@
+<h2>Order Summary</h2>
+
+<ul>
+{% for item in order_items %}
+    <li>
+        {{ item.quantity }} x {{ item.name }} {% if item.extras %} (Extras: {{ item.extras }}){% endif %} - €{{ item.subtotal }}
+    </li>
+{% endfor %}
+</ul>
+
+<p><strong>Total: €{{ total }}</strong></p>
+
+<button class="btn">Pay Now</button>
