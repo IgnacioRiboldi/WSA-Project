@@ -132,7 +132,7 @@
 
         <div class="order-details" style="display:none; margin-top:10px;">
             <ul>
-                {% for item in order.items %}
+                {% for item in order["items"] %}
                     <li>
                         {{ item.quantity }} x {{ item.name }} - €{{ item.subtotal }}
                     </li>

@@ -66,65 +66,60 @@ def special():
     special_food = daily_speciality.get(today)
     return render_template("special.html", today=today, special=special_food)
 
-@app.route("/order", methods=["GET", "POST"])
-def place_order():
-    if request.method == "POST":
-
-        ...
-
-    today = datetime.now().strftime("%A")
-    return render_template(
-        "order.html",
-        food_menu=food_menu,
-        drinks_menu=drinks_menu,
-        promotions=promotions,
-        daily_special=daily_speciality.get(today)
-    )
-
-if __name__ == "__main__":
-    app.run(debug=True)
-
 # Order History
-
 orders = []
 order_id_counter = 1
 
 
 @app.route("/order", methods=["GET", "POST"])
-def order():
+def place_order():
+
     global order_id_counter
 
     if request.method == "POST":
         items = []
         total = 0
 
-        # EJEMPLO: procesar campos del form
         for key, value in request.form.items():
             if value.isdigit() and int(value) > 0:
-                name = key
                 qty = int(value)
-
-                price = 10  
+                price = 10 #Default price
 
                 subtotal = price * qty
                 total += subtotal
 
                 items.append({
-                    "name": name,
+                    "name": key,
                     "quantity": qty,
                     "subtotal": subtotal
                 })
 
-        order = {
-            "id": order_id_counter,
-            "time": datetime.now().strftime("%H:%M:%S"),
-            "items": items,
-            "total": total
-        }
+        # Only save the order if there are items
+        if items:
+            new_order = {
+                "id": order_id_counter,
+                "time": datetime.now().strftime("%H:%M:%S"),
+                "items": items,
+                "total": total
+            }
 
-        orders.append(order)
-        order_id_counter += 1
+            orders.append(new_order)
+            order_id_counter += 1
 
-        return redirect(url_for("order"))
+        return redirect(url_for("place_order"))
 
-    return render_template("order.html", orders=orders)    
+    today = datetime.now().strftime("%A")
+
+    return render_template(
+        "order.html",
+        orders=orders,
+        food_menu=food_menu,
+        drinks_menu=drinks_menu,
+        promotions=promotions,
+        daily_special=daily_speciality.get(today)
+)
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
