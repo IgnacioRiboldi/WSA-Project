@@ -51,11 +51,19 @@ Flask Render Templates
 
 https://flask.palletsprojects.com/en/stable/tutorial/templates/
 
+https://flask.palletsprojects.com/en/stable/quickstart/#rendering-templates
+
+https://www.youtube.com/watch?v=QnDWIZuWYW0
+
 Flask Get and Post
 
 https://flask.palletsprojects.com/en/stable/quickstart/#http-methods
 
 https://www.youtube.com/watch?v=lxuTl8fmQNw
+
+Flask Routing
+
+https://flask.palletsprojects.com/en/stable/quickstart/#routing
 
 Flask Message Flashing
 
@@ -68,6 +76,16 @@ https://projects.raspberrypi.org/en/projects/python-web-server-with-flask/5
 Handling a POST Request Using an HTML
 
 https://www.geeksforgeeks.org/python/flask-creating-first-simple-application/
+
+Forms:
+
+https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms
+
+https://flask.palletsprojects.com/en/latest/api/#flask.Request.form
+
+JS Subtotal
+
+https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll
 
 Extra support:
 

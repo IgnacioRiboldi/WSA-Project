@@ -1,10 +1,13 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "supersecret"
 
-# Data
+# -----------------------
+# MENUS
+# -----------------------
+
 food_menu = [
     {"id": 1, "name": "Medialunas", "price": 2.00},
     {"id": 2, "name": "Facturas", "price": 3.00},
@@ -35,41 +38,61 @@ promotions = [
 daily_speciality = {
     "Monday": {"name": "Chipa (cheese bread)", "price": 4.00},
     "Tuesday": {"name": "Crusty sandwich", "price": 5.00},
-    "Wednesday": {"name": "Pulled pork sandwich (slow cooked with Malbec)", "price": 10.00},
+    "Wednesday": {"name": "Pulled pork sandwich", "price": 10.00},
     "Thursday": {"name": "Focaccia", "price": 8.00},
-    "Friday": {"name": "Choripan (Chorizo Sandwich with Chimichurri)", "price": 9.00},
-    "Saturday": {"name": "Milanesa Sandwich (beef or chicken)", "price": 12.00},
-    "Sunday": {"name": "Asado (Argentinian BBQ) - EXTRAS: Chimichurri/Salsa Criolla", "price": 20.00}
+    "Friday": {"name": "Choripan", "price": 9.00},
+    "Saturday": {"name": "Milanesa Sandwich", "price": 12.00},
+    "Sunday": {"name": "Asado", "price": 20.00}
 }
 
+# -----------------------
+# LOOKUP
+# -----------------------
 
-# Links
+menu_lookup = {}
+for item in food_menu + drinks_menu + promotions:
+    menu_lookup[str(item["id"])] = item
+
+# -----------------------
+# ORDERS
+# -----------------------
+
+orders = []
+order_id_counter = 1
+
+# -----------------------
+# ROUTES
+# -----------------------
+
 @app.route("/")
 def home():
     return render_template("index.html")
+
 
 @app.route("/food")
 def food():
     return render_template("food.html", food_menu=food_menu)
 
+
 @app.route("/drinks")
 def drinks():
     return render_template("drinks.html", drinks_menu=drinks_menu)
+
 
 @app.route("/promotions")
 def promo():
     return render_template("promotions.html", promotions=promotions)
 
+
 @app.route("/special")
 def special():
     today = datetime.now().strftime("%A")
-    special_food = daily_speciality.get(today)
-    return render_template("special.html", today=today, special=special_food)
+    return render_template("special.html", special=daily_speciality.get(today))
 
-# Order History
-orders = []
-order_id_counter = 1
 
+# -----------------------
+# ORDER SYSTEM
+# -----------------------
 
 @app.route("/order", methods=["GET", "POST"])
 def place_order():
@@ -81,20 +104,55 @@ def place_order():
         total = 0
 
         for key, value in request.form.items():
-            if value.isdigit() and int(value) > 0:
+
+            # ---------------- SPECIAL HANDLING ----------------
+            if key == "quantity_special":
+                try:
+                    qty = int(value)
+
+                    if qty > 0:
+                        today = datetime.now().strftime("%A")
+                        item = daily_speciality.get(today)
+
+                        if item:
+                            subtotal = item["price"] * qty
+                            total += subtotal
+
+                            items.append({
+                                "name": item["name"],
+                                "quantity": qty,
+                                "subtotal": subtotal
+                            })
+
+                except ValueError:
+                    pass
+
+                continue
+
+            # ---------------- NORMAL ITEMS ----------------
+            try:
                 qty = int(value)
-                price = 10 #Default price
 
-                subtotal = price * qty
-                total += subtotal
+                if qty > 0:
+                    item_id = key.split("_")[-1]
+                    item = menu_lookup.get(item_id)
 
-                items.append({
-                    "name": key,
-                    "quantity": qty,
-                    "subtotal": subtotal
-                })
+                    if not item:
+                        continue
 
-        # Only save the order if there are items
+                    subtotal = item["price"] * qty
+                    total += subtotal
+
+                    items.append({
+                        "name": item["name"],
+                        "quantity": qty,
+                        "subtotal": subtotal
+                    })
+
+            except ValueError:
+                continue
+
+        # ---------------- SAVE ORDER ----------------
         if items:
             new_order = {
                 "id": order_id_counter,
@@ -117,9 +175,12 @@ def place_order():
         drinks_menu=drinks_menu,
         promotions=promotions,
         daily_special=daily_speciality.get(today)
-)
+    )
 
+
+# -----------------------
+# RUN APP
+# -----------------------
 
 if __name__ == "__main__":
     app.run(debug=True)
-
