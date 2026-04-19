@@ -4,58 +4,6 @@
     <meta charset="UTF-8">
     <title>Place Your Order</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h1, h2 { text-align: center; }
-
-        nav { text-align: center; margin-bottom: 20px; }
-        nav a.btn { margin: 0 5px; }
-
-        form { max-width: 700px; margin: 0 auto; }
-        section { margin-bottom: 30px; }
-
-        ul { list-style: none; padding: 0; }
-
-        .order-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .item-price { flex: 0 0 80px; font-weight: bold; }
-        .item-name { flex: 1; margin: 0 10px; }
-        .item-quantity { width: 60px; }
-
-        .extras { font-size: 0.9em; color: #555; margin-right: 10px; }
-
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #3498db;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-
-        .btn:hover { background-color: #2980b9; }
-
-        #dynamic-total { font-weight: bold; }
-
-        /* ORDER HISTORY */
-        .order-details {
-            display: none;
-            margin-top: 10px;
-            padding: 10px;
-            background: #f9f9f9;
-            border-radius: 8px;
-        }
-    </style>
 </head>
 
 <body>
@@ -72,118 +20,105 @@
         <a href="/order" class="btn">Place Order</a>
     </nav>
 
-    <p style="text-align:center;">Select items and quantities</p>
+    <p class="center">Select items and quantities</p>
 </header>
-
-<!-- ===================== ORDER FORM ===================== -->
 
 <form method="POST" action="{{ url_for('place_order') }}">
 
-    <!-- FOOD -->
-    <section>
-        <h2>Food</h2>
-        <ul>
-        {% for item in food_menu %}
-            <li class="order-item">
-                <span class="item-price">€{{ "%.2f"|format(item.price) }}</span>
-                <span class="item-name">{{ item.name }}</span>
+<section class="menu">
+    <h2>Food</h2>
+    <ul>
+    {% for item in food_menu %}
+        <li class="order-item">
+            <span class="item-price">€{{ "%.2f"|format(item.price) }}</span>
+            <span class="item-name">{{ item.name }}</span>
 
-                <input type="number"
-                       name="quantity_food_{{ item.id }}"
-                       value="0"
-                       min="0"
-                       class="item-quantity"
-                       data-price="{{ item.price }}">
-            </li>
-        {% endfor %}
-        </ul>
-    </section>
+            <input type="number"
+                   name="quantity_food_{{ item.id }}"
+                   value="0"
+                   min="0"
+                   class="item-quantity"
+                   data-price="{{ item.price }}">
+        </li>
+    {% endfor %}
+    </ul>
+</section>
 
-    <!-- DRINKS -->
-    <section>
-        <h2>Drinks</h2>
-        <ul>
-        {% for item in drinks_menu %}
-            <li class="order-item">
-                <span class="item-price">€{{ "%.2f"|format(item.price) }}</span>
-                <span class="item-name">{{ item.name }}</span>
+<section class="menu">
+    <h2>Drinks</h2>
+    <ul>
+    {% for item in drinks_menu %}
+        <li class="order-item">
+            <span class="item-price">€{{ "%.2f"|format(item.price) }}</span>
+            <span class="item-name">{{ item.name }}</span>
 
-                <input type="number"
-                       name="quantity_drink_{{ item.id }}"
-                       value="0"
-                       min="0"
-                       class="item-quantity"
-                       data-price="{{ item.price }}">
-            </li>
-        {% endfor %}
-        </ul>
-    </section>
+            <input type="number"
+                   name="quantity_drink_{{ item.id }}"
+                   value="0"
+                   min="0"
+                   class="item-quantity"
+                   data-price="{{ item.price }}">
+        </li>
+    {% endfor %}
+    </ul>
+</section>
 
-    <!-- PROMOS -->
-    <section>
-        <h2>Promotions</h2>
-        <ul>
-        {% for item in promotions %}
-            <li class="order-item">
-                <span class="item-price">€{{ "%.2f"|format(item.price) }}</span>
-                <span class="item-name">{{ item.name }}</span>
+<section class="menu">
+    <h2>Promotions</h2>
+    <ul>
+    {% for item in promotions %}
+        <li class="order-item">
+            <span class="item-price">€{{ "%.2f"|format(item.price) }}</span>
+            <span class="item-name">{{ item.name }}</span>
 
-                <input type="number"
-                       name="quantity_promo_{{ item.id }}"
-                       value="0"
-                       min="0"
-                       class="item-quantity"
-                       data-price="{{ item.price }}">
-            </li>
-        {% endfor %}
-        </ul>
-    </section>
+            <input type="number"
+                   name="quantity_promo_{{ item.id }}"
+                   value="0"
+                   min="0"
+                   class="item-quantity"
+                   data-price="{{ item.price }}">
+        </li>
+    {% endfor %}
+    </ul>
+</section>
 
-    <!-- DAILY SPECIAL -->
-    {% if daily_special %}
-    <section>
-        <h2>Daily Special - {{ daily_special.name }}</h2>
+{% if daily_special %}
+<section class="menu">
+    <h2>Daily Special - {{ daily_special.name }}</h2>
+    <ul>
+        <li class="order-item">
+            <span class="item-price">€{{ "%.2f"|format(daily_special.price) }}</span>
+            <span class="item-name">{{ daily_special.name }}</span>
 
-        <ul>
-            <li class="order-item">
-                <span class="item-price">€{{ "%.2f"|format(daily_special.price) }}</span>
-                <span class="item-name">{{ daily_special.name }}</span>
+            <input type="number"
+                   name="quantity_special"
+                   value="0"
+                   min="0"
+                   class="item-quantity"
+                   data-price="{{ daily_special.price }}">
+        </li>
+    </ul>
+</section>
+{% endif %}
 
-                <input type="number"
-                       name="quantity_special"
-                       value="0"
-                       min="0"
-                       class="item-quantity"
-                       data-price="{{ daily_special.price }}">
-            </li>
-        </ul>
-    </section>
-    {% endif %}
+<hr>
 
-    <!-- ===================== LIVE PREVIEW ===================== -->
+<h2>Order Preview</h2>
 
-    <hr>
+<div class="menu">
+    <ul id="preview-list"></ul>
+    <strong>Total: €<span id="preview-total">0.00</span></strong>
+</div>
 
-    <h2>Order Preview</h2>
+<p class="right">
+    Total: €<span id="dynamic-total">0.00</span>
+</p>
 
-    <div style="background:#f9f9f9; padding:10px; border-radius:8px;">
-        <ul id="preview-list"></ul>
-        <strong>Total: €<span id="preview-total">0.00</span></strong>
-    </div>
-
-    <!-- TOTAL -->
-    <p style="text-align:right;">
-        Total: €<span id="dynamic-total">0.00</span>
-    </p>
-
-    <!-- SUBMIT -->
-    <div style="text-align:center;">
-        <button type="submit" class="btn">Place Order</button>
-    </div>
+<div class="center">
+    <button type="submit" class="btn">Place Order</button>
+</div>
 
 </form>
-
-<!-- ===================== ORDER HISTORY ===================== -->
 
 <hr>
 
@@ -192,13 +127,11 @@
 <ul>
 {% for order in orders %}
     <li style="margin-bottom:10px;">
-
         <button type="button" class="btn toggle-order">
             Order #{{ order.id }} - {{ order.time }} - €{{ "%.2f"|format(order.total) }}
         </button>
 
         <div class="order-details">
-
             <strong>Items:</strong>
 
             <ul>
@@ -213,17 +146,12 @@
             <hr>
 
             <strong>Total: €{{ "%.2f"|format(order.total) }}</strong>
-
         </div>
     </li>
 {% endfor %}
 </ul>
 
-<!-- ===================== SCRIPTS ===================== -->
-
 <script>
-/* -------- TOTAL + PREVIEW -------- */
-
 function updateUI() {
     let total = 0;
     let list = "";
@@ -249,17 +177,11 @@ function updateUI() {
     document.getElementById("dynamic-total").innerText = total.toFixed(2);
 }
 
-/* -------- EVENTS -------- */
-
 document.querySelectorAll(".item-quantity").forEach(el => {
     el.addEventListener("input", updateUI);
 });
 
-/* init */
 updateUI();
-
-
-/* -------- ORDER TOGGLE -------- */
 
 document.querySelectorAll(".toggle-order").forEach(btn => {
     btn.addEventListener("click", () => {
