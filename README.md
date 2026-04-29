@@ -87,6 +87,20 @@ JS Subtotal
 
 https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll
 
+SQLITE3
+
+Used to not loose orders once are placed, database connection.
+
+https://docs.python.org/3/library/sqlite3.html
+
+https://www.w3schools.com/python/ref_module_sqlite3.asp
+
+
+PYTHONANYWHERE LINK:
+
+https://iriboldi.pythonanywhere.com/
+
+
 Extra support:
 
 https://chatgpt.com/

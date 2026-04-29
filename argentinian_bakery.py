@@ -1,8 +1,34 @@
 from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime
+import sqlite3
+import json
 
 app = Flask(__name__)
 app.secret_key = "supersecret"
+
+DB_NAME = "orders.db"
+
+# -----------------------
+# DB SETUP
+# -----------------------
+
+def init_db():
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS orders (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        time TEXT,
+        items TEXT,
+        total REAL
+    )
+    """)
+
+    conn.commit()
+    conn.close()
+
+init_db()
 
 # -----------------------
 # MENUS
@@ -45,20 +71,47 @@ daily_speciality = {
     "Sunday": {"name": "Asado", "price": 20.00}
 }
 
-# -----------------------
-# LOOKUP
-# -----------------------
-
-menu_lookup = {}
-for item in food_menu + drinks_menu + promotions:
-    menu_lookup[str(item["id"])] = item
+menu_lookup = {
+    str(item["id"]): item
+    for item in (food_menu + drinks_menu + promotions)
+}
 
 # -----------------------
-# ORDERS
+# DB HELPERS
 # -----------------------
 
-orders = []
-order_id_counter = 1
+def save_order(time, items, total):
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+
+    c.execute(
+        "INSERT INTO orders (time, items, total) VALUES (?, ?, ?)",
+        (time, json.dumps(items), total)
+    )
+
+    conn.commit()
+    conn.close()
+
+
+def get_orders():
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+
+    c.execute("SELECT * FROM orders ORDER BY id DESC")
+    rows = c.fetchall()
+
+    conn.close()
+
+    orders = []
+    for row in rows:
+        orders.append({
+            "id": row[0],
+            "time": row[1],
+            "items": json.loads(row[2]),
+            "total": row[3]
+        })
+
+    return orders
 
 # -----------------------
 # ROUTES
@@ -97,19 +150,16 @@ def special():
 @app.route("/order", methods=["GET", "POST"])
 def place_order():
 
-    global order_id_counter
-
     if request.method == "POST":
         items = []
         total = 0
 
         for key, value in request.form.items():
 
-            # ---------------- SPECIAL HANDLING ----------------
+            # SPECIAL
             if key == "quantity_special":
                 try:
                     qty = int(value)
-
                     if qty > 0:
                         today = datetime.now().strftime("%A")
                         item = daily_speciality.get(today)
@@ -123,16 +173,13 @@ def place_order():
                                 "quantity": qty,
                                 "subtotal": subtotal
                             })
-
-                except ValueError:
+                except:
                     pass
-
                 continue
 
-            # ---------------- NORMAL ITEMS ----------------
+            # NORMAL
             try:
                 qty = int(value)
-
                 if qty > 0:
                     item_id = key.split("_")[-1]
                     item = menu_lookup.get(item_id)
@@ -148,21 +195,16 @@ def place_order():
                         "quantity": qty,
                         "subtotal": subtotal
                     })
-
-            except ValueError:
+            except:
                 continue
 
-        # ---------------- SAVE ORDER ----------------
+        # SAVE ORDER
         if items:
-            new_order = {
-                "id": order_id_counter,
-                "time": datetime.now().strftime("%H:%M:%S"),
-                "items": items,
-                "total": total
-            }
-
-            orders.append(new_order)
-            order_id_counter += 1
+            save_order(
+                datetime.now().strftime("%H:%M:%S"),
+                items,
+                total
+            )
 
         return redirect(url_for("place_order"))
 
@@ -170,7 +212,7 @@ def place_order():
 
     return render_template(
         "order.html",
-        orders=orders,
+        orders=get_orders(),
         food_menu=food_menu,
         drinks_menu=drinks_menu,
         promotions=promotions,
@@ -179,8 +221,8 @@ def place_order():
 
 
 # -----------------------
-# RUN APP
+# LOCAL RUN
 # -----------------------
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
