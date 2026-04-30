@@ -104,3 +104,11 @@ https://iriboldi.pythonanywhere.com/
 Extra support:
 
 https://chatgpt.com/
+
+Prompts used:
+
+- What was the best way to build a website with python and different pages. Where I was adviced to create a folder for templates and on the PY use just the app and some extras. I had many ideas on my mind but didn't know where to start.
+
+- I tried to get some help to add a photo as a background but didn't work even with AI support.
+
+- At first I was adding CSS code on each HTML, AI gave me the advice to create a static golder and style file to have the same format on each HTML, was very handy this.
